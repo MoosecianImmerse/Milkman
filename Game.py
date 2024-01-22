@@ -34,7 +34,14 @@ npcRectx = 0
 npcRecty= 0
 playerRect = pygame.Rect(0, 0, 30, 30)
 npcRect = pygame.Rect(0, 0, 30, 30)
-
+#Talk Suggestion With NPC
+CommuneQueue = False
+#Communication Suggestion
+Space = pygame.image.load('img/CommuneIcon.png')
+#Turns one when space pressed. Turns two after. Allows animation.
+PressedWait = 0
+#Tutorial
+tut = pygame.image.load('img/tutorial.png')
 
 #load images
 
@@ -90,6 +97,11 @@ class Player():
                 global speed
                 global eqa
                 global terminate
+                global npcRecty
+                global npcRectx
+                global CommuneQueue
+                global PressedWait
+                global Space
                 plcol = True
                 dx = 0
                 dy = 0
@@ -174,6 +186,20 @@ class Player():
                                         #check for border in x and y direction
                                         if self.rect.x + dx > 640:
                                                 dx = 0
+
+                        if npcRect.colliderect(self.rect.x + dx, self.rect.y + dy, self.width, self.height):
+                                 screen.blit(Space,(npcRectx-30,npcRecty-135))
+                                 CommuneQueue = True
+                                 dx = 0
+                                 dy = 0
+                                 key = pygame.key.get_pressed()
+                                 if CommuneQueue  == True and key[pygame.K_SPACE]:
+                                        Space = pygame.image.load('img/CommunePressed.png')
+                                        PressedWait = 1
+                                 else:
+                                        Space = pygame.image.load('img/CommuneIcon.png')
+                                        if PressedWait == 1:
+                                                PressedWait = 2
 
                                                 
 
@@ -267,6 +293,8 @@ class Npc():
                         hypotnuse = math.sqrt(angy**2+ angx**2)
                         if hypotnuse > 0:
                                 npcangle = math.degrees(math.atan(angy/hypotnuse))
+
+
 
                         if playerRecty > npcRecty and npcangle > 22:
                                 self.image = self.images_left[self.index]
@@ -395,7 +423,10 @@ playerFromStart = Player(640, 280)
 
 
 #NPC
-npc = Npc(280, 260)
+npc = Npc(670, 560)
+
+#Controls Scene
+land = 1
         
 def scene1():
         global fps
@@ -408,23 +439,30 @@ def scene1():
         global playerRectx
         global playerRecty
         global hitbox
+        global run
         global npc
         global player
         global event
         global world
         global runn
         global engame_over
+        global npcRectx
+        global npcRecty
+        global PressedWait
+        global land
+        
         SMCR = pygame.Rect(10, 370, 250, 250)
         HDCR = pygame.Rect(720, 290, 150, 100)
         NPCR = pygame.Rect(1000, 10, 300, 200)
         EFCR = pygame.Rect(720, 10, 270, 200)
         FCR = pygame.Rect(10, 190, 160, 105)
         OCR = pygame.Rect(500, 365, 70, 135)
+        
         clock.tick(fps)
         (mouseX, mouseY) = pygame.mouse.get_pos()
         screen.blit(bg_img, (0, 0))
         world.draw()
-        
+
         if hitbox == True:
                 pygame.draw.rect(screen, (255, 255, 255), playerRect, 2)
                 pygame.draw.rect(screen, (255, 255, 255), npcRect, 2)
@@ -448,10 +486,10 @@ def scene1():
 
                 #Office
                 pygame.draw.rect(screen, (0,0,255), OCR, 2)
-                
 
-
-                        
+        if PressedWait == 2:
+                land = 2
+       
         engame_over = npc.update(engame_over)
         game_over = playerFromStart.update(game_over)
 
@@ -461,11 +499,37 @@ def scene1():
 
         pygame.display.update()
 
+def tutorial():
+        global fps
+        global event
+        global land
+        global tut
+        global run
+        global PressedWait
+        
+        clock.tick(fps)
+        (mouseX, mouseY) = pygame.mouse.get_pos()
+        PressedWait= 0
+        
+        for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
+                        land = 1
 
+        screen.blit(tut,(0,0))
+        
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        run = False
 
-land = 1
+        pygame.display.update()
+        
 run = True
 while run:
+        print (land)
         if land == 1:
                 scene1()
+        if land == 2:
+                tutorial()
+        if land == 100:
+                pygame.quit()
 pygame.quit()
