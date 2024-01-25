@@ -15,7 +15,8 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('The Milkman')
 
 #define game variables
-
+#If False, Robe, If True, Suit
+Suit = False
 #Show Hitboxes
 hitbox = False
 #Spot
@@ -76,11 +77,19 @@ class Player():
                 self.images_blockb = []
                 self.index = 0
                 self.counter = 0
-                img_right = pygame.image.load('img/Back.png')
+                if Suit:
+                        img_right = pygame.image.load('img/Back.png')
+                else: 
+                        img_right = pygame.image.load('img/BackBusi.png')
                 for num in range(1, 5):
-                        img_right = pygame.image.load('img/Front.png')
-                        img_left = pygame.image.load('img/Back.png')
-                        img_lefto = pygame.image.load('img/Side.png')
+                        if Suit:
+                                img_right = pygame.image.load('img/FrontBusi.png')
+                                img_left = pygame.image.load('img/BackBusi.png')
+                                img_lefto = pygame.image.load('img/SideBusi.png')
+                        else:
+                                img_right = pygame.image.load('img/Front.png')
+                                img_left = pygame.image.load('img/Back.png')
+                                img_lefto = pygame.image.load('img/Side.png')
                         img_righto = pygame.transform.flip(img_lefto,True,False)
                         self.images_right.append(img_right)
                         self.images_righto.append(img_righto)
@@ -105,8 +114,6 @@ class Player():
                 global engame_over
                 global hitbox
                 global speed
-                global eqa
-                global terminate
                 global npcRecty
                 global npcRectx
                 global CommuneQueue
@@ -471,6 +478,10 @@ def scene1():
         global land
         global Spot
         global playerFromStart
+
+        if Spot == 2:
+                playerFromStart = Player(580,400)
+                Spot = 0
                 
         SMCR = pygame.Rect(10, 370, 250, 250)
         HDCR = pygame.Rect(720, 290, 150, 100)
@@ -489,9 +500,6 @@ def scene1():
         screen.blit(bg_img, (0, 0))
         world.draw()
 
-        if Spot == 2:
-                playerFromStart = Player(580,400)
-                Spot = 0
 
         if hitbox == True:
                 pygame.draw.rect(screen, (255, 255, 255), playerRect, 2)
