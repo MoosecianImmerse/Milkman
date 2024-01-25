@@ -17,7 +17,9 @@ pygame.display.set_caption('The Milkman')
 #define game variables
 
 #Show Hitboxes
-hitbox = True
+hitbox = False
+#Spot
+Spot = 0
 #Size of Border Tiles
 tile_size = 20
 #Function Variables for Player and NPC
@@ -76,10 +78,10 @@ class Player():
                 self.counter = 0
                 img_right = pygame.image.load('img/Back.png')
                 for num in range(1, 5):
-                        img_right = pygame.image.load('img/Back.png')
-                        img_left = pygame.image.load('img/Front.png')
+                        img_right = pygame.image.load('img/Front.png')
+                        img_left = pygame.image.load('img/Back.png')
                         img_lefto = pygame.image.load('img/Side.png')
-                        img_righto = pygame.transform.rotate(img_lefto,180)
+                        img_righto = pygame.transform.flip(img_lefto,True,False)
                         self.images_right.append(img_right)
                         self.images_righto.append(img_righto)
                         self.images_left.append(img_left)
@@ -453,26 +455,23 @@ land = 1
 def scene1():
         global fps
         global world
-        global worlddirection
         global playerRect
-        global eagame_over
-        global poof
         global game_over
         global playerRectx
         global playerRecty
         global hitbox
         global run
         global npc
-        global player
         global event
         global world
-        global runn
         global engame_over
         global npcRectx
         global npcRecty
         global PressedWait
         global land
-        
+        global Spot
+        global playerFromStart
+                
         SMCR = pygame.Rect(10, 370, 250, 250)
         HDCR = pygame.Rect(720, 290, 150, 100)
         NPCR = pygame.Rect(1000, 10, 300, 200)
@@ -482,8 +481,17 @@ def scene1():
         
         clock.tick(fps)
         (mouseX, mouseY) = pygame.mouse.get_pos()
+
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        run = False
+
         screen.blit(bg_img, (0, 0))
         world.draw()
+
+        if Spot == 2:
+                playerFromStart = Player(580,400)
+                Spot = 0
 
         if hitbox == True:
                 pygame.draw.rect(screen, (255, 255, 255), playerRect, 2)
@@ -518,9 +526,6 @@ def scene1():
         engame_over = npc.update(engame_over)
         game_over = playerFromStart.update(game_over)
 
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        run = False
 
         pygame.display.update()
 
@@ -539,12 +544,12 @@ def tutorial():
         for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
                         land = 1
+                if event.type == pygame.QUIT:
+                        run = False
 
         screen.blit(tut,(0,0))
         
-        for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                        run = False
+
 
         pygame.display.update()
 
@@ -553,30 +558,32 @@ def stats():
         global event
         global land
         global run
-        pygame.image.load('img/stats.png')
+        global Spot
+        sts = pygame.image.load('img/stats.png')
         
         clock.tick(fps)
         (mouseX, mouseY) = pygame.mouse.get_pos()
         
         for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
+                        Spot = 2
                         land = 1
-
-        screen.blit(tut,(0,0))
-        
-        for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                         run = False
+
+        screen.blit(sts,(0,0))
+        
 
         pygame.display.update()        
         
 run = True
 while run:
-        print (land)
         if land == 1:
                 scene1()
         if land == 2:
                 tutorial()
+        if land == 3:
+                stats()
         if land == 100:
                 pygame.quit()
 pygame.quit()
