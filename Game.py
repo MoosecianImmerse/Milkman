@@ -32,8 +32,8 @@ playerDirection = -2
 playerRecty= 0
 npcRectx = 0
 npcRecty= 0
-playerRect = pygame.Rect(0, 0, 30, 30)
-npcRect = pygame.Rect(0, 0, 30, 30)
+playerRect = pygame.Rect(0, 0, 35, 35)
+npcRect = pygame.Rect(0, 0, 35, 35)
 #Talk Suggestion With NPC
 CommuneQueue = False
 #Calculation Variables
@@ -74,13 +74,12 @@ class Player():
                 self.images_blockb = []
                 self.index = 0
                 self.counter = 0
-                img_right = pygame.image.load('img/guy.png')
+                img_right = pygame.image.load('img/Back.png')
                 for num in range(1, 5):
-                        img_right = pygame.image.load('img/guy.png')
-                        img_right = pygame.transform.scale(img_right, (30, 30))
-                        img_left = pygame.transform.rotate(img_right,180)
-                        img_lefto = pygame.transform.rotate(img_right,90)
-                        img_righto = pygame.transform.rotate(img_right,270)
+                        img_right = pygame.image.load('img/Back.png')
+                        img_left = pygame.image.load('img/Front.png')
+                        img_lefto = pygame.image.load('img/Side.png')
+                        img_righto = pygame.transform.rotate(img_lefto,180)
                         self.images_right.append(img_right)
                         self.images_righto.append(img_righto)
                         self.images_left.append(img_left)
