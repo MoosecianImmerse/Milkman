@@ -36,6 +36,15 @@ playerRect = pygame.Rect(0, 0, 30, 30)
 npcRect = pygame.Rect(0, 0, 30, 30)
 #Talk Suggestion With NPC
 CommuneQueue = False
+#Calculation Variables
+EmmisionDeals = 0
+NaturalDeals = 0
+EmmisionRates = 0
+NaturalRates = 0
+Workers = 0
+Houses = 2
+LayedOff = 0
+AssemblyLines = 0
 #Communication Suggestion
 Space = pygame.image.load('img/CommuneIcon.png')
 #Turns one when space pressed. Turns two after. Allows animation.
@@ -200,6 +209,7 @@ class Player():
                                         Space = pygame.image.load('img/CommuneIcon.png')
                                         if PressedWait == 1:
                                                 PressedWait = 2
+                                                
 
                                                 
 
@@ -399,6 +409,19 @@ world_data = [
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 ]
 
+def night():
+        MilkDeals = EmmisionDeals + NaturalDeals
+        MilkPay = (EmmisionDeals * EmmisionRates) + (NaturalDeals * NaturalRates)
+        if Workers/1000 > Houses:
+                LayedOff = (Houses*1000) - Workers
+                Workers = Workers - LayedOff
+        while AssemblyLines < Workers/1000:
+                AssemblyLines = AssemblyLines - 1
+        
+
+
+
+
 world = World(world_data)
 
 #Start of Game
@@ -489,6 +512,9 @@ def scene1():
 
         if PressedWait == 2:
                 land = 2
+
+        if playerRect.colliderect(OCR):
+                land = 3
        
         engame_over = npc.update(engame_over)
         game_over = playerFromStart.update(game_over)
@@ -522,6 +548,28 @@ def tutorial():
                         run = False
 
         pygame.display.update()
+
+def stats():
+        global fps
+        global event
+        global land
+        global run
+        pygame.image.load('img/stats.png')
+        
+        clock.tick(fps)
+        (mouseX, mouseY) = pygame.mouse.get_pos()
+        
+        for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
+                        land = 1
+
+        screen.blit(tut,(0,0))
+        
+        for event in pygame.event.get():
+                if event.type == pygame.QUIT:
+                        run = False
+
+        pygame.display.update()        
         
 run = True
 while run:
