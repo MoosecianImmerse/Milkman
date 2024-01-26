@@ -16,9 +16,9 @@ pygame.display.set_caption('The Milkman')
 
 #define game variables
 #If False, Robe, If True, Suit
-Suit = False
+Suit = True
 #Show Hitboxes
-hitbox = False
+hitbox = True
 #Spot
 Spot = 0
 #Size of Border Tiles
@@ -42,8 +42,8 @@ CommuneQueue = False
 #Calculation Variables
 EmmisionDeals = 0
 NaturalDeals = 0
-EmmisionRates = 0
-NaturalRates = 0
+EmmisionRates = 30
+NaturalRates = 30
 Workers = 0
 Houses = 2
 LayedOff = 0
@@ -334,11 +334,12 @@ class Npc():
 
 
 white = (255, 255, 255)
+black = (0,0,0)
 blue = (101, 137, 255)
 
 font = pygame.font.SysFont('Bauhaus 93', 70)
 font_score = pygame.font.SysFont('Bauhaus 93', 50)
-font_stats = pygame.font.SysFont('inkfree', 20)
+font_stats = pygame.font.SysFont('Calibri', 24)
 
 def draw_text(text, font, text_col, x, y):
         img = font.render(text, True, text_col)
@@ -418,6 +419,14 @@ world_data = [
 ]
 
 def night():
+        global EmmisionDeals 
+        global NaturalDeals
+        global EmmisionRates
+        global NaturalRates
+        global Workers
+        global Houses
+        global LayedOff
+        global AssemblyLines
         MilkDeals = EmmisionDeals + NaturalDeals
         MilkPay = (EmmisionDeals * EmmisionRates) + (NaturalDeals * NaturalRates)
         if Workers/1000 > Houses:
@@ -567,6 +576,14 @@ def stats():
         global land
         global run
         global Spot
+        global EmmisionDeals 
+        global NaturalDeals
+        global EmmisionRates
+        global NaturalRates
+        global Workers
+        global Houses
+        global LayedOff
+        global AssemblyLines
         sts = pygame.image.load('img/stats.png')
         
         clock.tick(fps)
@@ -580,6 +597,10 @@ def stats():
                         run = False
 
         screen.blit(sts,(0,0))
+        text1 = str(EmmisionDeals+NaturalDeals)
+        text2 = str((EmmisionDeals * EmmisionRates) + (NaturalDeals * NaturalRates))
+        draw_text((text1+" Liters"), font_stats, black, 270,30)
+        draw_text(("$"+text2), font_stats, black, 290,115)
         
 
         pygame.display.update()        
