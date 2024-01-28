@@ -18,7 +18,9 @@ pygame.display.set_caption('The Milkman')
 #If False, Robe, If True, Suit
 Suit = False
 #Show Hitboxes
-hitbox = True
+hitbox = False
+#Running
+Running = False
 #Spot
 Spot = 0
 #Size of Border Tiles
@@ -27,7 +29,7 @@ tile_size = 20
 game_over = 0
 engame_over = 0
 #Speed of Playyer
-speed = 3
+speed = 2.5
 #Angle of NPC Based on Player
 npcangle = 0
 playerRectx = 0
@@ -157,28 +159,29 @@ class Player():
                                 self.counter += 1
                                 self.direction = 1
                                 self.image = self.images_righto[self.index]
-                        if key[pygame.K_LEFT] and key[pygame.K_LSHIFT]:
-                                dx -= speed * 2
-                                self.counter += 1
-                                self.direction = 2
-                                self.image = self.images_lefto[self.index]
-                        if key[pygame.K_RIGHT] and key[pygame.K_LSHIFT]:
-                                dx += speed * 2
-                                self.counter += 1
-                                self.direction = 1
-                                self.image = self.images_righto[self.index]
-                        if key[pygame.K_UP] and key[pygame.K_LSHIFT]:
-                                dy -= speed * 2
-                                self.counter += 1
-                                self.direction = -2
-                                self.vel_y = -1
-                                self.image = self.images_right[self.index]
-                        if key[pygame.K_DOWN] and key[pygame.K_LSHIFT]:
-                                dy += speed * 2
-                                self.counter += 1
-                                self.direction = -1
-                                self.vel_y = 1
-                                self.image = self.images_left[self.index]
+                        if Running == True:
+                                if key[pygame.K_LEFT] and key[pygame.K_LSHIFT]:
+                                        dx -= speed * 2
+                                        self.counter += 1
+                                        self.direction = 2
+                                        self.image = self.images_lefto[self.index]
+                                if key[pygame.K_RIGHT] and key[pygame.K_LSHIFT]:
+                                        dx += speed * 2
+                                        self.counter += 1
+                                        self.direction = 1
+                                        self.image = self.images_righto[self.index]
+                                if key[pygame.K_UP] and key[pygame.K_LSHIFT]:
+                                        dy -= speed * 2
+                                        self.counter += 1
+                                        self.direction = -2
+                                        self.vel_y = -1
+                                        self.image = self.images_right[self.index]
+                                if key[pygame.K_DOWN] and key[pygame.K_LSHIFT]:
+                                        dy += speed * 2
+                                        self.counter += 1
+                                        self.direction = -1
+                                        self.vel_y = 1
+                                        self.image = self.images_left[self.index]
                         if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False and key[pygame.K_DOWN] and key[pygame.K_UP] :
                                 self.counter = 0
                                 self.index = 0
@@ -392,10 +395,10 @@ world_data = [
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
-[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-[1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0], 
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 4, 0, 0],
+[1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+[1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 0, 0, 1, 1, 1, 1, 1, 1],
 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
 [0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 1],
@@ -546,7 +549,6 @@ def scene1():
 
         if playerRect.colliderect(OCR):
                 land = 3
-                print ('hiu')
         if playerRect.colliderect(SMCR):
                 land = 4
 
@@ -650,3 +652,4 @@ while run:
         if land == 100:
                 pygame.quit()
 pygame.quit()
+
