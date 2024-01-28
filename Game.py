@@ -16,7 +16,7 @@ pygame.display.set_caption('The Milkman')
 
 #define game variables
 #If False, Robe, If True, Suit
-Suit = True
+Suit = False
 #Show Hitboxes
 hitbox = True
 #Spot
@@ -48,6 +48,8 @@ Workers = 0
 Houses = 2
 LayedOff = 0
 AssemblyLines = 0
+#Money 
+Money = 0
 #Communication Suggestion
 Space = pygame.image.load('img/CommuneIcon.png')
 #Turns one when space pressed. Turns two after. Allows animation.
@@ -57,7 +59,7 @@ tut = pygame.image.load('img/tutorial.png')
 
 #load images
 
-bg_img = pygame.image.load('img/ground.png')
+bg_img = pygame.image.load('img/BackG.jpg')
 bg_img = pygame.transform.scale(bg_img, (1280, 640))
 
 
@@ -491,9 +493,11 @@ def scene1():
         if Spot == 2:
                 playerFromStart = Player(580,400)
                 Spot = 0
-                
+        elif Spot == 3:
+                playerFromStart = Player(260,480)
+                Spot = 0
         SMCR = pygame.Rect(10, 370, 250, 250)
-        HDCR = pygame.Rect(720, 290, 150, 100)
+        HDCR = pygame.Rect(710, 290, 150, 100)
         NPCR = pygame.Rect(1000, 10, 300, 200)
         EFCR = pygame.Rect(720, 10, 270, 200)
         FCR = pygame.Rect(10, 190, 160, 105)
@@ -534,14 +538,18 @@ def scene1():
                 #Office
                 pygame.draw.rect(screen, (0,0,255), OCR, 2)
 
+        engame_over = npc.update(engame_over)
+        game_over = playerFromStart.update(game_over)
+
         if PressedWait == 2:
                 land = 2
 
         if playerRect.colliderect(OCR):
                 land = 3
-       
-        engame_over = npc.update(engame_over)
-        game_over = playerFromStart.update(game_over)
+                print ('hiu')
+        if playerRect.colliderect(SMCR):
+                land = 4
+
 
 
         pygame.display.update()
@@ -600,7 +608,31 @@ def stats():
         text1 = str(EmmisionDeals+NaturalDeals)
         text2 = str((EmmisionDeals * EmmisionRates) + (NaturalDeals * NaturalRates))
         draw_text((text1+" Liters"), font_stats, black, 270,30)
-        draw_text(("$"+text2), font_stats, black, 290,115)
+        draw_text(("$"+text2), font_stats, black, 300,115)
+        
+
+        pygame.display.update()        
+
+def store():
+        global fps
+        global event
+        global land
+        global run
+        global Spot
+        global Money
+        stsa = pygame.image.load('img/SuperMark.png')
+        
+        clock.tick(fps)
+        (mouseX, mouseY) = pygame.mouse.get_pos()
+        
+        for event in pygame.event.get():
+                if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
+                        Spot = 3
+                        land = 1
+                if event.type == pygame.QUIT:
+                        run = False
+
+        screen.blit(stsa,(0,0))
         
 
         pygame.display.update()        
@@ -613,6 +645,8 @@ while run:
                 tutorial()
         if land == 3:
                 stats()
+        if land == 4:
+                store()
         if land == 100:
                 pygame.quit()
 pygame.quit()
