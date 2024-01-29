@@ -480,7 +480,7 @@ def title():
         global run
         global Spot
         global Money
-        backgr = pygame.image.load('img/titler.jpeg')
+        backgr = pygame.image.load('img/titlest.jpg')
         screen.blit(backgr, (0, 0))
         
         clock.tick(fps)
@@ -490,17 +490,16 @@ def title():
         blue = (101, 137, 255)
 
         font = pygame.font.Font('Fonts/Alphakind.ttf', 72)
-        font_score = pygame.font.SysFont('Fonts/Alphakind.ttf', 50)
-        font_stats = pygame.font.SysFont('Fonts/Alphakind.ttf', 24)
+        font2 = pygame.font.Font('Fonts/Alphakind.ttf', 172)
 
-        draw_text('Mooventure', font, white, 430, 100)
-        draw_text('Play', font, white, 545, 335)
-        PlayRect = pygame.Rect(520, 320, 200, 120)
+        draw_text('Mooventure', font2, white, 150, 20)
+        draw_text('Play', font, white, 545, 435)
+        PlayRect = pygame.Rect(520, 420, 200, 120)
         pygame.draw.rect(screen, (255, 255, 255), PlayRect, 2)
         
         
         for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN and 720> mouseX >520 and 440>mouseY> 320:
+                if event.type == pygame.MOUSEBUTTONDOWN and 720> mouseX >520 and 540>mouseY> 420:
                         land = 1
                 if event.type == pygame.QUIT:
                         run = False
