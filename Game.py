@@ -480,7 +480,7 @@ def title():
         global run
         global Spot
         global Money
-        backgr = pygame.image.load('img/title.jpg')
+        backgr = pygame.image.load('img/titler.jpeg')
         screen.blit(backgr, (0, 0))
         
         clock.tick(fps)
