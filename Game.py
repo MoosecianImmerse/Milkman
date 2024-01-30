@@ -491,9 +491,9 @@ def title():
         blue = (101, 137, 255)
 
         font = pygame.font.Font('Fonts/Alphakind.ttf', 72)
-        font2 = pygame.font.Font('Fonts/Alphakind.ttf', 172)
+        font2 = pygame.font.Font('Fonts/Alphakind.ttf', 152)
 
-        draw_text('Mooventure', font2, white, 150, -10)
+        draw_text('Mooventure', font2, white, 190, -10)
         draw_text('Play', font, white, 545, 435)
         PlayRect = pygame.Rect(520, 420, 200, 120)
         pygame.draw.rect(screen, (255, 255, 255), PlayRect, 2)
