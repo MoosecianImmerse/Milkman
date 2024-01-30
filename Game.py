@@ -15,12 +15,22 @@ screen = pygame.display.set_mode((screen_width, screen_height))
 pygame.display.set_caption('Mooventure')
 
 #define game variables
+#Cursor Variables
+CursorRect = (0, 0, 20, 20)
+CursorRecty = 0
+CursorRectx = 0
 #If False, Robe, If True, Suit
 Suit = False
 #Show Hitboxes
 hitbox = False
+#Checks for SPace
+clicked = True
+#CursorCount Counts and Disappears Cursor
+CursCon = 0
 #Running
 Running = True
+#Cursor BVariable
+came_over = 0
 #Spot
 Spot = 0
 #Size of Border Tiles
@@ -29,7 +39,7 @@ tile_size = 20
 game_over = 0
 engame_over = 0
 #Speed of Playyer
-speed = 5
+speed = 2.5
 #Angle of NPC Based on Player
 npcangle = 0
 playerRectx = 0
@@ -66,20 +76,120 @@ bg_img = pygame.transform.scale(bg_img, (1280, 640))
 
 Stopo = False
 
+
+
+class Cursor():
+        def __init__(self, x, y):
+                self.images_right = []
+                self.images_righto = []
+                self.images_left = []
+                self.images_lefto = []
+                self.index = 0
+                self.counter = 0
+                img_right = pygame.image.load('img/Cursor.png')
+                for num in range(1, 5):
+                        img_right = pygame.image.load('img/Cursor.png')
+                        img_left = pygame.image.load('img/CursorClick.png')
+                        self.images_right.append(img_right)
+                        self.images_left.append(img_left)
+                self.image = self.images_right[self.index]
+                self.rect = self.image.get_rect()
+                self.rect.x = x
+                self.rect.y = y
+                self.width = self.image.get_width()
+                self.height = self.image.get_height()
+                self.vel_y = 0
+                self.jumped = False
+                self.direction = 0
+
+        def update(self, came_over):
+                #globalize neccesary variables
+                global event
+                global hitbox
+                global CursorRect
+                global CursorRecty
+                global CursorRectx
+                global clicked
+                global run
+                global CursCon
+                cursorspeed = 5
+                dx = 0
+                dy = 0
+                (mouseX, mouseY) = pygame.mouse.get_pos()
+                
+
+                if came_over == 0:
+                        for event in pygame.event.get():
+                                if event.type == pygame.QUIT:
+                                        run = False
+                        #get keypresses
+                        key = pygame.key.get_pressed()
+                        event = pygame.event.get()
+                        if key[pygame.K_UP]:
+                                dy -= cursorspeed
+                                self.counter += 1
+                                self.direction = -2
+                                self.vel_y = -1
+                                CursCon = 0
+                        if key[pygame.K_DOWN]:
+                                dy += cursorspeed
+                                self.counter += 1
+                                self.direction = -1
+                                self.vel_y = 1
+                                CursCon = 0
+                        if key[pygame.K_LEFT]:
+                                dx -= cursorspeed
+                                self.counter += 1
+                                self.direction = 2
+                                CursCon = 0
+                        if key[pygame.K_RIGHT]:
+                                dx += cursorspeed
+                                self.counter += 1
+                                self.direction = 1
+                                CursCon = 0
+                        if key[pygame.K_SPACE]:
+                                self.image = self.images_left[self.index]
+                                clicked = True
+                                CursCon = 0
+                        else:
+                                self.image = self.images_right[self.index]
+                                clicked = False
+                        if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False and key[pygame.K_DOWN] == False and key[pygame.K_UP] == False:
+                                CursCon += 1
+                        
+
+                        #update player coordinates
+                        self.rect.x += dx
+                        self.rect.y += dy
+                
+                                        
+                                
+
+                if CursCon < 600:
+                        #draw player onto screen
+                        screen.blit(self.image, self.rect)
+
+
+
+                #create global variables for player location
+                CursorRect = self.rect
+                CursorRecty = self.rect.y
+                CursorRectx = self.rect.x
+                CursorDirection = self.direction
+                
+
+                return came_over
+
+
+
+
+
 class Player():
         def __init__(self, x, y):
                 self.images_right = []
                 self.images_righto = []
                 self.images_left = []
                 self.images_lefto = []
-                self.images_attack = []
-                self.images_battack = []
-                self.images_lattack = []
-                self.images_rattack = []
-                self.images_block = []
-                self.images_blockl=[]
-                self.images_blockr = []
-                self.images_blockb = []
                 self.index = 0
                 self.counter = 0
                 if Suit:
@@ -124,6 +234,7 @@ class Player():
                 global CommuneQueue
                 global PressedWait
                 global Space
+                global run
                 plcol = True
                 dx = 0
                 dy = 0
@@ -138,52 +249,29 @@ class Player():
                         #get keypresses
                         key = pygame.key.get_pressed()
                         event = pygame.event.get()
-                        if key[pygame.K_UP]:
+                        if key[pygame.K_w]:
                                 dy -= speed
                                 self.counter += 1
                                 self.direction = -2
                                 self.vel_y = -1
                                 self.image = self.images_right[self.index]
-                        if key[pygame.K_DOWN]:
+                        if key[pygame.K_s]:
                                 dy += speed
                                 self.counter += 1
                                 self.direction = -1
                                 self.vel_y = 1
                                 self.image = self.images_left[self.index]
-                        if key[pygame.K_LEFT]:
+                        if key[pygame.K_a]:
                                 dx -= speed
                                 self.counter += 1
                                 self.direction = 2
                                 self.image = self.images_lefto[self.index]
-                        if key[pygame.K_RIGHT]:
+                        if key[pygame.K_d]:
                                 dx += speed
                                 self.counter += 1
                                 self.direction = 1
                                 self.image = self.images_righto[self.index]
-                        if Running == True:
-                                if key[pygame.K_LEFT] and key[pygame.K_LSHIFT]:
-                                        dx -= speed * 2
-                                        self.counter += 1
-                                        self.direction = 2
-                                        self.image = self.images_lefto[self.index]
-                                if key[pygame.K_RIGHT] and key[pygame.K_LSHIFT]:
-                                        dx += speed * 2
-                                        self.counter += 1
-                                        self.direction = 1
-                                        self.image = self.images_righto[self.index]
-                                if key[pygame.K_UP] and key[pygame.K_LSHIFT]:
-                                        dy -= speed * 2
-                                        self.counter += 1
-                                        self.direction = -2
-                                        self.vel_y = -1
-                                        self.image = self.images_right[self.index]
-                                if key[pygame.K_DOWN] and key[pygame.K_LSHIFT]:
-                                        dy += speed * 2
-                                        self.counter += 1
-                                        self.direction = -1
-                                        self.vel_y = 1
-                                        self.image = self.images_left[self.index]
-                        if key[pygame.K_LEFT] == False and key[pygame.K_RIGHT] == False and key[pygame.K_DOWN] and key[pygame.K_UP] :
+                        if key[pygame.K_d] == False and key[pygame.K_a] == False and key[pygame.K_s] and key[pygame.K_w] :
                                 self.counter = 0
                                 self.index = 0
                                 if self.direction == 1:
@@ -424,6 +512,8 @@ world_data = [
 [1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1],
 ]
 
+        
+
 def night():
         global EmmisionDeals 
         global NaturalDeals
@@ -447,6 +537,7 @@ def night():
 
 world = World(world_data)
 
+curse = Cursor(640,320)
 #Start of Game
 playerFromStart = Player(625, 280)
 
@@ -474,13 +565,25 @@ npc = Npc(670, 560)
 #Controls Scene
 land = 0
 
+set = pygame.image.load('Img/Settings.png')
+Sole = False
+Gol = False
+
 def title():
+        global set
         global fps
         global event
+        global Sole
+        global Gol
         global land
         global run
         global Spot
         global Money
+        global came_over
+        global CursorRect
+        global CursorRectx
+        global CursorRecty
+        global Clicked
         backgr = pygame.image.load('img/titlest.jpg')
         screen.blit(backgr, (0, 0))
         
@@ -497,15 +600,30 @@ def title():
         draw_text('Play', font, white, 545, 435)
         PlayRect = pygame.Rect(520, 420, 200, 120)
         pygame.draw.rect(screen, (255, 255, 255), PlayRect, 2)
+        screen.blit(set,(1200,560))
         
-        
+
         for event in pygame.event.get():
                 if event.type == pygame.MOUSEBUTTONDOWN and 720> mouseX >520 and 540>mouseY> 420:
                         land = 1
                 if event.type == pygame.QUIT:
                         run = False
-                        
+                if 720> CursorRectx >520 and 540>CursorRecty> 420 and clicked == True:
+                        land = 1
+                if 1280> CursorRectx >1200 and 640>CursorRecty> 560 and clicked == True:
+                        set = pygame.transform.rotate(set,90)
+                        Gol = True
+                if event.type == pygame.MOUSEBUTTONDOWN and 1280> mouseX >1200 and 640>mouseY> 560:
+                        set = pygame.transform.rotate(set,90)
+                        Gol =True
 
+                if Sole == True:
+                        land = 1
+                        Sole = False
+                if Gol:
+                        Sole = True
+                        Gol = False
+        came_over = curse.update(came_over)
 
         pygame.display.update()  
         
@@ -527,6 +645,7 @@ def scene1():
         global npcRecty
         global PressedWait
         global land
+        global came_over
         global Spot
         global playerFromStart
 
@@ -573,6 +692,11 @@ def scene1():
                                 land = 0
                         if event.type == pygame.MOUSEBUTTONDOWN and 720> mouseX >520 and 340>mouseY> 220:
                                 Stopo = False
+                        if 720> CursorRectx >520 and 540>CursorRecty> 420 and clicked == True:
+                                Stopo = False
+                                land = 0
+                        if 720> CursorRectx >520 and 340>CursorRecty> 220 and clicked == True:
+                                Stopo = False
         world.draw()
 
 
@@ -611,6 +735,8 @@ def scene1():
         if playerRect.colliderect(SMCR):
                 land = 4
 
+        came_over = curse.update(came_over)
+
 
 
         pygame.display.update()
@@ -639,65 +765,6 @@ def tutorial():
 
         pygame.display.update()
 
-def stats():
-        global fps
-        global event
-        global land
-        global run
-        global Spot
-        global EmmisionDeals 
-        global NaturalDeals
-        global EmmisionRates
-        global NaturalRates
-        global Workers
-        global Houses
-        global LayedOff
-        global AssemblyLines
-        sts = pygame.image.load('img/stats.png')
-        
-        clock.tick(fps)
-        (mouseX, mouseY) = pygame.mouse.get_pos()
-        
-        for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
-                        Spot = 2
-                        land = 1
-                if event.type == pygame.QUIT:
-                        run = False
-
-        screen.blit(sts,(0,0))
-        text1 = str(EmmisionDeals+NaturalDeals)
-        text2 = str((EmmisionDeals * EmmisionRates) + (NaturalDeals * NaturalRates))
-        draw_text((text1+" Liters"), font_stats, black, 270,30)
-        draw_text(("$"+text2), font_stats, black, 300,115)
-        
-
-        pygame.display.update()        
-
-def store():
-        global fps
-        global event
-        global land
-        global run
-        global Spot
-        global Money
-        stsa = pygame.image.load('img/SuperMark.png')
-        
-        clock.tick(fps)
-        (mouseX, mouseY) = pygame.mouse.get_pos()
-        
-        for event in pygame.event.get():
-                if event.type == pygame.MOUSEBUTTONDOWN and 70>mouseX >0 and 70 >mouseY> 0:
-                        Spot = 3
-                        land = 1
-                if event.type == pygame.QUIT:
-                        run = False
-
-        screen.blit(stsa,(0,0))
-        
-
-        pygame.display.update()        
-        
 run = True
 while run:
         if land == 0:
@@ -706,11 +773,6 @@ while run:
                 scene1()
         if land == 2:
                 tutorial()
-        if land == 3:
-                stats()
-        if land == 4:
-                store()
         if land == 100:
                 pygame.quit()
 pygame.quit()
-
